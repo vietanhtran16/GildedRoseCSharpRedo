@@ -15,39 +15,42 @@ namespace csharpcore
         {
             for (var i = 0; i < Items.Count; i++)
             {
-                if (Items[i].Name == ItemName.Sulfuras)
+                switch (Items[i].Name)
                 {
-                    continue;
+                    case ItemName.Sulfuras:
+                        break;
+                    case ItemName.AgedBried:
+                        UpdateAgedBried(i);
+                        break;
+                    case ItemName.BackstagePass:
+                        UpdateBackstagePass(i);
+                        break;
+                    default:
+                        UpdateNormalItems(i);
+                        break;
                 }
+            }
+        }
 
-                if (IsNormalItems(i))
-                {
-                    UpdateNormalItems(i);
-                    continue;
-                }
+        private void UpdateAgedBried(int i)
+        {
+            IncreaseQuality(i);
 
-                if (Items[i].Name == ItemName.BackstagePass)
-                {
-                    UpdateQualityForBackstagePass(i);
-                    DecreaseSellIn(i);
-                    if (HasExpired(i))
-                    {
-                        Items[i].Quality = Items[i].Quality - Items[i].Quality;
-                    }
-                    continue;
-                }
+            DecreaseSellIn(i);
 
-                if (Items[i].Name == ItemName.AgedBried)
-                {
-                    IncreaseQuality(i);
+            if (HasExpired(i))
+            {
+                IncreaseQuality(i);
+            }
+        }
 
-                    DecreaseSellIn(i);
-
-                    if (HasExpired(i))
-                    {
-                        IncreaseQuality(i);
-                    }
-                }
+        private void UpdateBackstagePass(int i)
+        {
+            UpdateQualityForBackstagePass(i);
+            DecreaseSellIn(i);
+            if (HasExpired(i))
+            {
+                Items[i].Quality = Items[i].Quality - Items[i].Quality;
             }
         }
 
