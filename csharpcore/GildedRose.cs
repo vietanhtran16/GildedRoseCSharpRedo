@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace csharpcore
 {
@@ -14,75 +15,89 @@ namespace csharpcore
         {
             for (var i = 0; i < Items.Count; i++)
             {
-                if (Items[i].Name != ItemName.AgedBried && Items[i].Name != ItemName.BackstagePass)
+                if (Items[i].Name == ItemName.Sulfuras)
                 {
-                    if (Items[i].Quality > 0)
-                    {
-                        if (Items[i].Name != ItemName.Sulfuras)
-                        {
-                            Items[i].Quality = Items[i].Quality - 1;
-                        }
-                    }
-                }
-                else
-                {
-                    if (Items[i].Quality < 50)
-                    {
-                        Items[i].Quality = Items[i].Quality + 1;
-
-                        if (Items[i].Name == ItemName.BackstagePass)
-                        {
-                            if (Items[i].SellIn < 11)
-                            {
-                                if (Items[i].Quality < 50)
-                                {
-                                    Items[i].Quality = Items[i].Quality + 1;
-                                }
-                            }
-
-                            if (Items[i].SellIn < 6)
-                            {
-                                if (Items[i].Quality < 50)
-                                {
-                                    Items[i].Quality = Items[i].Quality + 1;
-                                }
-                            }
-                        }
-                    }
+                    continue;
                 }
 
-                if (Items[i].Name != ItemName.Sulfuras)
+                if (IsNormalItems(i))
                 {
-                    Items[i].SellIn = Items[i].SellIn - 1;
+                    UpdateNormalItems(i);
+                    continue;
                 }
 
-                if (Items[i].SellIn < 0)
+                if (Items[i].Name == ItemName.BackstagePass)
                 {
-                    if (Items[i].Name != ItemName.AgedBried)
+                    UpdateQualityForBackstagePass(i);
+                    DecreaseSellIn(i);
+                    if (HasExpired(i))
                     {
-                        if (Items[i].Name != ItemName.BackstagePass)
-                        {
-                            if (Items[i].Quality > 0)
-                            {
-                                if (Items[i].Name != ItemName.Sulfuras)
-                                {
-                                    Items[i].Quality = Items[i].Quality - 1;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Items[i].Quality = Items[i].Quality - Items[i].Quality;
-                        }
+                        Items[i].Quality = Items[i].Quality - Items[i].Quality;
                     }
-                    else
+                    continue;
+                }
+
+                if (Items[i].Name == ItemName.AgedBried)
+                {
+                    IncreaseQuality(i);
+
+                    DecreaseSellIn(i);
+
+                    if (HasExpired(i))
                     {
-                        if (Items[i].Quality < 50)
-                        {
-                            Items[i].Quality = Items[i].Quality + 1;
-                        }
+                        IncreaseQuality(i);
                     }
                 }
+            }
+        }
+
+        private void UpdateNormalItems(int i)
+        {
+            if (Items[i].Quality > 0)
+            {
+                Items[i].Quality = Items[i].Quality - 1;
+            }
+
+            DecreaseSellIn(i);
+
+            if (Items[i].Quality > 0 && HasExpired(i))
+            {
+
+                Items[i].Quality = Items[i].Quality - 1;
+            }
+        }
+
+        private bool HasExpired(int i)
+        {
+            return Items[i].SellIn < 0;
+        }
+
+        private bool IsNormalItems(int i)
+        {
+            return Items[i].Name != ItemName.AgedBried && Items[i].Name != ItemName.BackstagePass;
+        }
+
+        private void DecreaseSellIn(int i)
+        {
+            Items[i].SellIn = Items[i].SellIn - 1;
+        }
+
+        private void IncreaseQuality(int index)
+        {
+            Items[index].Quality = Math.Min(Items[index].Quality + 1, 50);
+        }
+
+        private void UpdateQualityForBackstagePass(int i)
+        {
+            IncreaseQuality(i);
+            if (Items[i].SellIn < 11)
+            {
+                IncreaseQuality(i);
+            }
+
+            if (Items[i].SellIn < 6)
+            {
+                IncreaseQuality(i);
             }
         }
     }
