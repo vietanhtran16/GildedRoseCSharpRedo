@@ -53,38 +53,19 @@ namespace csharpcore
 
         private void UpdateNormalItems(int i)
         {
-            if (Items[i].Quality > 0)
-            {
-                Items[i].Quality = Items[i].Quality - 1;
-            }
+            DecreaseQuality(i);
 
             DecreaseSellIn(i);
 
-            if (Items[i].Quality > 0 && HasExpired(i))
+            if (HasExpired(i))
             {
-
-                Items[i].Quality = Items[i].Quality - 1;
+                DecreaseQuality(i);
             }
-        }
-
-        private bool HasExpired(int i)
-        {
-            return Items[i].SellIn < 0;
         }
 
         private bool IsNormalItems(int i)
         {
             return Items[i].Name != ItemName.AgedBried && Items[i].Name != ItemName.BackstagePass;
-        }
-
-        private void DecreaseSellIn(int i)
-        {
-            Items[i].SellIn = Items[i].SellIn - 1;
-        }
-
-        private void IncreaseQuality(int index)
-        {
-            Items[index].Quality = Math.Min(Items[index].Quality + 1, 50);
         }
 
         private void UpdateQualityForBackstagePass(int i)
@@ -99,6 +80,26 @@ namespace csharpcore
             {
                 IncreaseQuality(i);
             }
+        }
+
+        private bool HasExpired(int i)
+        {
+            return Items[i].SellIn < 0;
+        }
+
+        private void IncreaseQuality(int index)
+        {
+            Items[index].Quality = Math.Min(Items[index].Quality + 1, 50);
+        }
+
+        private void DecreaseQuality(int index)
+        {
+            Items[index].Quality = Math.Max(Items[index].Quality - 1, 0);
+        }
+
+        private void DecreaseSellIn(int i)
+        {
+            Items[i].SellIn = Items[i].SellIn - 1;
         }
     }
 }
