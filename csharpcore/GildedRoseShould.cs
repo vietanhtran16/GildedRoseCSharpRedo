@@ -168,5 +168,33 @@ namespace csharpcore
             Assert.Equal(-1, item.SellIn);
             Assert.Equal(0, item.Quality);
         }
+
+        [Fact]
+        public void DropConjuredItemQualityByTwoWhenNotExpired()
+        {
+            IList<Item> Items = new List<Item> { new Item { Name = ItemName.Conjured, SellIn = 10, Quality = 20 } };
+            GildedRose app = new GildedRose(Items, new ItemUpdater());
+
+            app.UpdateQuality();
+
+            Item item = Items[0];
+            Assert.Equal(ItemName.Conjured, item.Name);
+            Assert.Equal(9, item.SellIn);
+            Assert.Equal(18, item.Quality);
+        }
+
+        [Fact]
+        public void DropConjuredItemQualityByFourWhenExpired()
+        {
+            IList<Item> Items = new List<Item> { new Item { Name = ItemName.Conjured, SellIn = 0, Quality = 20 } };
+            GildedRose app = new GildedRose(Items, new ItemUpdater());
+
+            app.UpdateQuality();
+
+            Item item = Items[0];
+            Assert.Equal(ItemName.Conjured, item.Name);
+            Assert.Equal(-1, item.SellIn);
+            Assert.Equal(16, item.Quality);
+        }
     }
 }

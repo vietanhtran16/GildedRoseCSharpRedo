@@ -12,6 +12,7 @@ namespace csharpcore
             this.updaterRegistry.Add(ItemName.AgedBried, new AgedBriedUpdater(new Adjuster()));
             this.updaterRegistry.Add(ItemName.BackstagePass, new BackstagePassUpdater(new Adjuster()));
             this.updaterRegistry.Add(ItemName.Sulfuras, new SulfurasUpdater(new Adjuster()));
+            this.updaterRegistry.Add(ItemName.Conjured, new ConjuredItemUpdater(new Adjuster()));
         }
 
         public void UpdateItem(Item item)
