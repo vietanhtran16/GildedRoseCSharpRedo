@@ -1,77 +1,29 @@
 using System;
+using System.Collections.Generic;
 
 namespace csharpcore
 {
     public class ItemUpdater
     {
-        public void UpdateAgedBried(Item item)
+        private Updater defaultUpdater = new NormalItemUpdater(new Adjuster());
+        private Dictionary<string, Updater> updaterRegistry = new Dictionary<string, Updater>();
+        public ItemUpdater()
         {
-            DecreaseSellIn(item);
-            if (HasExpired(item))
+            this.updaterRegistry.Add(ItemName.AgedBried, new AgedBriedUpdater(new Adjuster()));
+            this.updaterRegistry.Add(ItemName.BackstagePass, new BackstagePassUpdater(new Adjuster()));
+            this.updaterRegistry.Add(ItemName.Sulfuras, new SulfurasUpdater(new Adjuster()));
+        }
+
+        public void UpdateItem(Item item)
+        {
+            if (this.updaterRegistry.ContainsKey(item.Name))
             {
-                IncreaseQuality(item, 2);
+                this.updaterRegistry[item.Name].Update(item);
             }
             else
             {
-                IncreaseQuality(item, 1);
+                this.defaultUpdater.Update(item);
             }
-        }
-
-        public void UpdateBackstagePass(Item item)
-        {
-            UpdateQualityForBackstagePass(item);
-            DecreaseSellIn(item);
-
-            if (HasExpired(item))
-            {
-                item.Quality = 0;
-            }
-        }
-        private void UpdateQualityForBackstagePass(Item item)
-        {
-            IncreaseQuality(item, 1);
-            if (item.SellIn < 11)
-            {
-                IncreaseQuality(item, 1);
-            }
-
-            if (item.SellIn < 6)
-            {
-                IncreaseQuality(item, 1);
-            }
-        }
-
-        public void UpdateNormalItems(Item item)
-        {
-            DecreaseSellIn(item);
-            if (HasExpired(item))
-            {
-                DecreaseQualityBy(item, 2);
-            }
-            else
-            {
-                DecreaseQualityBy(item, 1);
-            }
-        }
-
-        private bool HasExpired(Item item)
-        {
-            return item.SellIn < 0;
-        }
-
-        private void IncreaseQuality(Item item, int inccrementValue)
-        {
-            item.Quality = Math.Min(item.Quality + inccrementValue, 50);
-        }
-
-        private void DecreaseQualityBy(Item item, int decrementValue)
-        {
-            item.Quality = Math.Max(item.Quality - decrementValue, 0);
-        }
-
-        private void DecreaseSellIn(Item item)
-        {
-            item.SellIn = item.SellIn - 1;
         }
     }
 }

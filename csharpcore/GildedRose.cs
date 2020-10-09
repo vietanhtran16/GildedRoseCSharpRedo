@@ -17,21 +17,7 @@ namespace csharpcore
         {
             for (var i = 0; i < Items.Count; i++)
             {
-                var currentItem = Items[i];
-                switch (currentItem.Name)
-                {
-                    case ItemName.Sulfuras:
-                        break;
-                    case ItemName.AgedBried:
-                        this.itemUpdater.UpdateAgedBried(currentItem);
-                        break;
-                    case ItemName.BackstagePass:
-                        this.itemUpdater.UpdateBackstagePass(currentItem);
-                        break;
-                    default:
-                        this.itemUpdater.UpdateNormalItems(currentItem);
-                        break;
-                }
+                this.itemUpdater.UpdateItem(Items[i]);
             }
         }
     }
