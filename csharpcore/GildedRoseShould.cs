@@ -16,7 +16,7 @@ namespace csharpcore
         public void IncreaseAgedBrieByOneWhenSellInIsPositive()
         {
             IList<Item> Items = new List<Item> { new Item { Name = ItemName.AgedBried, SellIn = 1, Quality = 5 } };
-            GildedRose app = new GildedRose(Items);
+            GildedRose app = new GildedRose(Items, new ItemUpdater());
 
             app.UpdateQuality();
 
@@ -30,7 +30,7 @@ namespace csharpcore
         public void IncreaseAgedBrieByTwoWhenSellInIsNegative()
         {
             IList<Item> Items = new List<Item> { new Item { Name = ItemName.AgedBried, SellIn = 0, Quality = 0 } };
-            GildedRose app = new GildedRose(Items);
+            GildedRose app = new GildedRose(Items, new ItemUpdater());
 
             app.UpdateQuality();
 
@@ -44,7 +44,7 @@ namespace csharpcore
         public void NotIncreaseAgedBrieQualityOverFifty()
         {
             IList<Item> Items = new List<Item> { new Item { Name = ItemName.AgedBried, SellIn = -1, Quality = 49 } };
-            GildedRose app = new GildedRose(Items);
+            GildedRose app = new GildedRose(Items, new ItemUpdater());
 
             app.UpdateQuality();
 
@@ -58,7 +58,7 @@ namespace csharpcore
         public void NeverAlterSulufrasLegendaryItem()
         {
             IList<Item> Items = new List<Item> { new Item { Name = ItemName.Sulfuras, SellIn = 0, Quality = 80 } };
-            GildedRose app = new GildedRose(Items);
+            GildedRose app = new GildedRose(Items, new ItemUpdater());
 
             app.UpdateQuality();
 
@@ -73,7 +73,7 @@ namespace csharpcore
         public void DecreaseNormalItemQualityByOneWhenSellInIsPositive(string itemName)
         {
             IList<Item> Items = new List<Item> { new Item { Name = itemName, SellIn = 10, Quality = 40 } };
-            GildedRose app = new GildedRose(Items);
+            GildedRose app = new GildedRose(Items, new ItemUpdater());
 
             app.UpdateQuality();
 
@@ -88,7 +88,7 @@ namespace csharpcore
         public void DecreaseNormalItemQualityByTwoWhenSellInIsPositive(string itemName)
         {
             IList<Item> Items = new List<Item> { new Item { Name = itemName, SellIn = 0, Quality = 40 } };
-            GildedRose app = new GildedRose(Items);
+            GildedRose app = new GildedRose(Items, new ItemUpdater());
 
             app.UpdateQuality();
 
@@ -103,7 +103,7 @@ namespace csharpcore
         public void NotDecreseNormalItemQualityBelowZero(string itemName)
         {
             IList<Item> Items = new List<Item> { new Item { Name = itemName, SellIn = 1, Quality = 0 } };
-            GildedRose app = new GildedRose(Items);
+            GildedRose app = new GildedRose(Items, new ItemUpdater());
 
             app.UpdateQuality();
 
@@ -116,14 +116,14 @@ namespace csharpcore
         [Fact]
         public void IncreaseBackstagePassQualityByOneWhenSellInMoreThanTen()
         {
-            IList<Item> Items = new List<Item> { new Item { Name = ItemName.BackstagePass, SellIn = 11, Quality = 20 } };
-            GildedRose app = new GildedRose(Items);
+            IList<Item> Items = new List<Item> { new Item { Name = ItemName.BackstagePass, SellIn = 12, Quality = 20 } };
+            GildedRose app = new GildedRose(Items, new ItemUpdater());
 
             app.UpdateQuality();
 
             Item item = Items[0];
             Assert.Equal(ItemName.BackstagePass, item.Name);
-            Assert.Equal(10, item.SellIn);
+            Assert.Equal(11, item.SellIn);
             Assert.Equal(21, item.Quality);
         }
 
@@ -131,7 +131,7 @@ namespace csharpcore
         public void IncreaseBackstagePassQualityByTwoWhenSellInLessThanEleven()
         {
             IList<Item> Items = new List<Item> { new Item { Name = ItemName.BackstagePass, SellIn = 10, Quality = 20 } };
-            GildedRose app = new GildedRose(Items);
+            GildedRose app = new GildedRose(Items, new ItemUpdater());
 
             app.UpdateQuality();
 
@@ -145,7 +145,7 @@ namespace csharpcore
         public void IncreaseBackstagePassQualityByThreeWhenSellInLessThanSix()
         {
             IList<Item> Items = new List<Item> { new Item { Name = ItemName.BackstagePass, SellIn = 5, Quality = 20 } };
-            GildedRose app = new GildedRose(Items);
+            GildedRose app = new GildedRose(Items, new ItemUpdater());
 
             app.UpdateQuality();
 
@@ -159,7 +159,7 @@ namespace csharpcore
         public void DropBackstagePassQualityToZeroAfterConcert()
         {
             IList<Item> Items = new List<Item> { new Item { Name = ItemName.BackstagePass, SellIn = 0, Quality = 20 } };
-            GildedRose app = new GildedRose(Items);
+            GildedRose app = new GildedRose(Items, new ItemUpdater());
 
             app.UpdateQuality();
 
